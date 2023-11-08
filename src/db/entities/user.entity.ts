@@ -1,5 +1,6 @@
 import {
   AfterInsert,
+  BeforeInsert,
   Column,
   CreateDateColumn,
   Entity,
@@ -8,6 +9,7 @@ import {
 } from 'typeorm';
 
 import { CustomEntity } from '@db/entities/abstraction/customEntity';
+import { genSaltSync, hashSync } from 'bcrypt';
 
 @Entity('user')
 export class User extends CustomEntity {
@@ -29,6 +31,11 @@ export class User extends CustomEntity {
 
   @UpdateDateColumn()
   updated_at: Date;
+
+  @BeforeInsert()
+  setPassword() {
+    this.password = hashSync(this.password, genSaltSync(10));
+  }
 
   @AfterInsert()
   logInsert() {
