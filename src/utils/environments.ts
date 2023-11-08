@@ -13,5 +13,5 @@ const expressSchema = z.object({
   PORT: z.string().min(1),
 });
 
-export const typeormEnv = typeormConfigSchema.parse(process.env);
+export const dbEnv = typeormConfigSchema.parse(process.env);
 export const expressEnv = expressSchema.parse(process.env);

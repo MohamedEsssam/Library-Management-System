@@ -1,6 +1,8 @@
 import 'module-alias/register';
 import 'reflect-metadata';
 import express from 'express';
+
+import '@configs/ormconfig';
 import { expressEnv } from '@utils/environments';
 
 async function bootstrap() {
