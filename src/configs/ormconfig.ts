@@ -3,7 +3,6 @@ import { DataSource, DataSourceOptions } from 'typeorm';
 import { resolve } from 'path';
 
 import { dbEnv } from '@utils/environments';
-import { entities } from '@db/entities';
 
 const typeormEnv = dbEnv;
 export const dbConfigs: DataSourceOptions = {
@@ -16,8 +15,8 @@ export const dbConfigs: DataSourceOptions = {
   synchronize: false,
   migrationsRun: true,
   logging: true,
-  entities,
-  // migrations: [resolve(__dirname, '../db/migrations/*.ts')],
+  entities: [resolve(__dirname, '../db/entities/*.entity.ts')],
+  migrations: [resolve(__dirname, '../db/migrations/*.ts')],
 };
 
 const dataSource = new DataSource(dbConfigs);
