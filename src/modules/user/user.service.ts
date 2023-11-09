@@ -33,6 +33,41 @@ export class UserService {
     return token;
   }
 
+  async login(email: string, password: string) {
+    const existedUser = await this.userRepo.getUserByEmail(email);
+    if (
+      !(existedUser && this.verifyPassword(password, existedUser['password']))
+    )
+      throw new Error(`user with email: ${email} not exist`);
+
+    const token = generateToken({
+      id: existedUser['id'],
+      email: existedUser['email'],
+      role: existedUser['role']['name'],
+    });
+    return token;
+  }
+
+  async getUserById(userId: string) {
+    return this.userRepo.getUserByEmail(userId);
+  }
+
+  async getUserByEmail(email: string) {
+    return this.userRepo.getUserByEmail(email);
+  }
+
+  async getBorrowers() {
+    return this.userRepo.getBorrowers();
+  }
+
+  async updateUser(userId: string, updatedUser: Partial<User>) {
+    return this.userRepo.updateUser(userId, updatedUser);
+  }
+
+  async deleteUser(userId: string) {
+    return this.userRepo.deleteUser(userId);
+  }
+
   private async verifyPassword(password: string, hashedPassword: string) {
     return compareSync(password, hashedPassword);
   }
