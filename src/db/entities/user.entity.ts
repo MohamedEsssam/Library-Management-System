@@ -7,9 +7,9 @@ import {
   Index,
   UpdateDateColumn,
 } from 'typeorm';
+import { genSaltSync, hashSync } from 'bcrypt';
 
 import { CustomEntity } from '@db/entities/abstraction/customEntity';
-import { genSaltSync, hashSync } from 'bcrypt';
 
 @Entity('user')
 export class User extends CustomEntity {

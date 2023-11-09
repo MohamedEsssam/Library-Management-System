@@ -1,8 +1,8 @@
 import { JsonController, Body, Get } from 'routing-controllers';
-import { UserService } from './user.service';
-import { User } from '@db/entities/user.entity';
 import { Service } from 'typedi';
-import { CreateUserDto } from './dtos/create-user.dto';
+
+import { UserService } from '@modules/user/user.service';
+import { CreateUserDto } from '@modules/user/dtos/create-user.dto';
 
 @Service()
 @JsonController('/user')

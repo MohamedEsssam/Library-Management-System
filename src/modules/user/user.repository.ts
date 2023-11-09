@@ -1,8 +1,8 @@
 import { Service } from 'typedi';
 import { Repository } from 'typeorm';
 
-import { User } from '@db/entities/user.entity';
 import dataSource from '@configs/ormconfig';
+import { User } from '@db/entities/user.entity';
 
 @Service()
 export class UserRepository {
