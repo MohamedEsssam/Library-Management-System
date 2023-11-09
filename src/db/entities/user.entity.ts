@@ -2,14 +2,14 @@ import {
   AfterInsert,
   BeforeInsert,
   Column,
-  CreateDateColumn,
   Entity,
   Index,
-  UpdateDateColumn,
+  ManyToOne,
 } from 'typeorm';
 import { genSaltSync, hashSync } from 'bcrypt';
 
 import { CustomEntity } from '@db/entities/abstraction/customEntity';
+import { Role } from '@db/entities/role.entity';
 
 @Entity('user')
 export class User extends CustomEntity {
@@ -26,11 +26,8 @@ export class User extends CustomEntity {
   @Column()
   password: string;
 
-  @CreateDateColumn()
-  created_at: Date;
-
-  @UpdateDateColumn()
-  updated_at: Date;
+  @ManyToOne(() => Role, (role) => role.users, { eager: true, nullable: false })
+  role: Partial<Role>;
 
   @BeforeInsert()
   setPassword() {
