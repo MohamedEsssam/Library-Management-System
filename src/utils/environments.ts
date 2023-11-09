@@ -13,5 +13,11 @@ const expressSchema = z.object({
   PORT: z.string().min(1),
 });
 
+const jwtSchema = z.object({
+  JWT_KEY: z.string().min(1),
+  EXPIRATION_TIME: z.string().min(1),
+});
+
 export const dbEnv = typeormConfigSchema.parse(process.env);
 export const expressEnv = expressSchema.parse(process.env);
+export const jwtEnv = jwtSchema.parse(process.env);
