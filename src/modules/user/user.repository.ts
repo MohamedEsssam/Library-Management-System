@@ -15,4 +15,8 @@ export class UserRepository {
 
     return this.userRepo.save(userToBeCreate);
   }
+
+  async getUserByEmail(email: string) {
+    return this.userRepo.findOneBy({ email });
+  }
 }
