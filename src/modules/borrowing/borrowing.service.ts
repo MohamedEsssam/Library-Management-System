@@ -140,6 +140,7 @@ export class BorrowingService {
     const worksheet = workbook.addWorksheet('Borrowings');
 
     worksheet.columns = [
+      { header: 'Borrowing ID', key: 'borrowingId', width: 60 },
       { header: 'Book ID', key: 'bookId', width: 60 },
       { header: 'Book Title', key: 'bookTitle', width: 20 },
       { header: 'Borrower ID', key: 'borrowerId', width: 60 },
@@ -150,6 +151,7 @@ export class BorrowingService {
 
     borrowings.forEach((borrowing) => {
       worksheet.addRow({
+        borrowingId: borrowing['id'],
         bookId: borrowing['book']['id'],
         bookTitle: borrowing['book']['title'],
         borrowerId: `${borrowing['borrower']['id']}`,

@@ -74,13 +74,19 @@ export class BorrowingController {
     return this.borrowingService.getOverdueBooks();
   }
 
-  @Get('/period/export/xlsx')
+  @Get('/period/:startDate/:endDate/export/xlsx')
   @UseBefore(authGuard, roleGuard([Roles.ADMIN]))
-  async getBorrowingsInPeriod(@Body() period: BorrowingPeriodDto) {
-    const startDate = new Date(period['startDate']);
-    const endDate = new Date(period['endDate']);
+  async getBorrowingsInPeriod(
+    @Param('startDate') startDate: string,
+    @Param('endDate') endDate: string,
+  ) {
+    const startDateObj = new Date(startDate);
+    const endDateObj = new Date(endDate);
 
-    return this.borrowingService.getBorrowingsInPeriod(startDate, endDate);
+    return this.borrowingService.getBorrowingsInPeriod(
+      startDateObj,
+      endDateObj,
+    );
   }
 
   @Get('/period/lasttmonth/export/xlsx')
