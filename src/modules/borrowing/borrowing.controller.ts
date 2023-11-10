@@ -21,6 +21,7 @@ import {
   getLastDayOfMonth,
   getLastMonth,
 } from '@utils/date-formatter';
+import { rateLimitGuard } from '@middleware/rate-limit-guard.middleware';
 
 @Service()
 @JsonController('/borrowings')
@@ -55,27 +56,27 @@ export class BorrowingController {
   }
 
   @Get('/byBorrower')
-  @UseBefore(authGuard, roleGuard([Roles.BORROWER]))
+  @UseBefore(authGuard, rateLimitGuard(10, 60000), roleGuard([Roles.BORROWER]))
   getBorrowingsByBorrower(@Req() req: Request) {
     const borrower = req['user'];
 
     return this.borrowingService.getBorrowingsByBorrower(borrower['id']);
   }
 
-  @UseBefore(authGuard, roleGuard([Roles.ADMIN]))
   @Get('')
+  @UseBefore(authGuard, rateLimitGuard(10, 60000), roleGuard([Roles.ADMIN]))
   getBorrowings(@Req() req: Request) {
     return this.borrowingService.getBorrowings();
   }
 
   @Get('/overdue')
-  @UseBefore(authGuard, roleGuard([Roles.ADMIN]))
+  @UseBefore(authGuard, rateLimitGuard(10, 60000), roleGuard([Roles.ADMIN]))
   getOverdueBooks() {
     return this.borrowingService.getOverdueBooks();
   }
 
   @Get('/period/:startDate/:endDate/export/xlsx')
-  @UseBefore(authGuard, roleGuard([Roles.ADMIN]))
+  @UseBefore(authGuard, rateLimitGuard(10, 60000), roleGuard([Roles.ADMIN]))
   async getBorrowingsInPeriod(
     @Param('startDate') startDate: string,
     @Param('endDate') endDate: string,
@@ -90,7 +91,7 @@ export class BorrowingController {
   }
 
   @Get('/period/lasttmonth/export/xlsx')
-  @UseBefore(authGuard, roleGuard([Roles.ADMIN]))
+  @UseBefore(authGuard, rateLimitGuard(10, 60000), roleGuard([Roles.ADMIN]))
   async getBorrowingsLastMonth() {
     const startDate = getFirstDayOfMonth(getLastMonth(new Date()));
     const endDate = getLastDayOfMonth(getLastMonth(new Date()));
@@ -101,7 +102,7 @@ export class BorrowingController {
   }
 
   @Get('/overdue/lasttmonth/export/xlsx')
-  @UseBefore(authGuard, roleGuard([Roles.ADMIN]))
+  @UseBefore(authGuard, rateLimitGuard(10, 60000), roleGuard([Roles.ADMIN]))
   async getBorrowingsOverdueInPeriod() {
     const startDate = getFirstDayOfMonth(getLastMonth(new Date()));
     const endDate = getLastDayOfMonth(getLastMonth(new Date()));

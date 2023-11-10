@@ -32,7 +32,8 @@ export class UserController {
   }
 
   @Get('/borrowers')
-  async getBorrowers(@Body() user: CreateUserDto) {
+  @UseBefore(authGuard)
+  async getBorrowers() {
     return this.userService.getBorrowers();
   }
 

@@ -17,6 +17,7 @@ import { roleGuard } from '@middleware/role-guard.middleware';
 import { BookService } from '@modules/book/book.service';
 import { CreateBookDto } from '@modules/book/dtos/create-book.dto';
 import { UpdateBookDto } from '@modules/book/dtos/update-book.dto';
+import { rateLimitGuard } from '@middleware/rate-limit-guard.middleware';
 
 @Service()
 @JsonController('/books')
@@ -30,6 +31,7 @@ export class UserController {
   }
 
   @Get('')
+  @UseBefore(rateLimitGuard(10, 60000)) // Allow 10 requests per minute
   async getBooks(
     @QueryParam('title') title?: string,
     @QueryParam('author') author?: string,
@@ -40,6 +42,7 @@ export class UserController {
   }
 
   @Get('/:bookId')
+  @UseBefore(rateLimitGuard(10, 60000))
   async getBookById(@Param('bookId') bookId: string) {
     return this.bookService.getBookById(bookId);
   }
