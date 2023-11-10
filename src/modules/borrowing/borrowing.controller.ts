@@ -1,3 +1,4 @@
+import { Service } from 'typedi';
 import {
   JsonController,
   Post,
@@ -9,12 +10,17 @@ import {
   UseBefore,
 } from 'routing-controllers';
 
-import { BorrowingService } from './borrowing.service';
-import { CreateBorrowingDto } from './dtos.ts/create-borrowing.dto';
-import { Service } from 'typedi';
 import { Roles } from '@enums/roles.enum';
 import { roleGuard } from '@middleware/role-guard.middleware';
 import { authGuard } from '@middleware/auth-guard.middleware';
+import { BorrowingService } from '@modules/borrowing/borrowing.service';
+import { CreateBorrowingDto } from '@modules/borrowing/dtos.ts/create-borrowing.dto';
+import { BorrowingPeriodDto } from '@modules/borrowing/dtos.ts/borrowing-period.dto';
+import {
+  getFirstDayOfMonth,
+  getLastDayOfMonth,
+  getLastMonth,
+} from '@utils/date-formatter';
 
 @Service()
 @JsonController('/borrowings')
@@ -66,5 +72,37 @@ export class BorrowingController {
   @UseBefore(authGuard, roleGuard([Roles.ADMIN]))
   getOverdueBooks() {
     return this.borrowingService.getOverdueBooks();
+  }
+
+  @Get('/period/export/xlsx')
+  @UseBefore(authGuard, roleGuard([Roles.ADMIN]))
+  async getBorrowingsInPeriod(@Body() period: BorrowingPeriodDto) {
+    const startDate = new Date(period['startDate']);
+    const endDate = new Date(period['endDate']);
+
+    return this.borrowingService.getBorrowingsInPeriod(startDate, endDate);
+  }
+
+  @Get('/period/lasttmonth/export/xlsx')
+  @UseBefore(authGuard, roleGuard([Roles.ADMIN]))
+  async getBorrowingsLastMonth() {
+    const startDate = getFirstDayOfMonth(getLastMonth(new Date()));
+    const endDate = getLastDayOfMonth(getLastMonth(new Date()));
+
+    console.log(startDate, endDate);
+
+    return this.borrowingService.getBorrowingsInPeriod(startDate, endDate);
+  }
+
+  @Get('/overdue/lasttmonth/export/xlsx')
+  @UseBefore(authGuard, roleGuard([Roles.ADMIN]))
+  async getBorrowingsOverdueInPeriod() {
+    const startDate = getFirstDayOfMonth(getLastMonth(new Date()));
+    const endDate = getLastDayOfMonth(getLastMonth(new Date()));
+
+    return this.borrowingService.getOverdueBorrowingsInPeriod(
+      startDate,
+      endDate,
+    );
   }
 }

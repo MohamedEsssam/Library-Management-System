@@ -1,5 +1,5 @@
 import { Service } from 'typedi';
-import { LessThan, Repository } from 'typeorm';
+import { Between, LessThan, Repository } from 'typeorm';
 
 import dataSource from '@configs/ormconfig';
 import { Borrowing } from '@db/entities/borrowing.entity';
@@ -50,5 +50,29 @@ export class BorrowingRepository {
     updatedBorrowing: Partial<Borrowing>,
   ) {
     return this.repo.update(borrowingId, updatedBorrowing);
+  }
+
+  async getBorrowingsInPeriod(
+    startDate: Date,
+    endDate: Date,
+  ): Promise<Borrowing[]> {
+    return this.repo.find({
+      where: {
+        created_at: Between(startDate, endDate),
+      },
+      relations: ['book', 'borrower'],
+    });
+  }
+
+  async getOverdueBorrowingsInPeriod(
+    startDate: Date,
+    endDate: Date,
+  ): Promise<Borrowing[]> {
+    return this.repo.find({
+      where: {
+        dueDate: Between(startDate, endDate),
+      },
+      relations: ['book', 'borrower'],
+    });
   }
 }

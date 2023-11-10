@@ -1,9 +1,14 @@
-// src/services/BorrowingService.ts
 import { Service } from 'typedi';
-import { BorrowingRepository } from './borrowing.repository';
+import { Workbook } from 'exceljs';
+import { dirname } from 'path';
+import { existsSync, mkdirSync } from 'fs';
+import { NotFoundError } from 'routing-controllers';
+
+import { Borrowing } from '@db/entities/borrowing.entity';
+import { BorrowingRepository } from '@modules/borrowing/borrowing.repository';
 import { BookService } from '@modules/book/book.service';
 import { UserService } from '@modules/user/user.service';
-import { NotFoundError } from 'routing-controllers';
+import { formatDate } from '@utils/date-formatter';
 
 @Service()
 export class BorrowingService {
@@ -95,5 +100,70 @@ export class BorrowingService {
 
   async getBorrowings() {
     return this.borrowingRepo.getBorrowings();
+  }
+
+  async getBorrowingsInPeriod(startDate: Date, endDate: Date) {
+    const borrowings = await this.borrowingRepo.getBorrowingsInPeriod(
+      startDate,
+      endDate,
+    );
+
+    const filePath = `./exports/borrowings/borrowings_${formatDate(
+      startDate,
+    )}_${formatDate(endDate)}.xlsx`;
+
+    await this.exportToXlsx(borrowings, filePath);
+
+    return borrowings;
+  }
+
+  async getOverdueBorrowingsInPeriod(startDate: Date, endDate: Date) {
+    const borrowings = await this.borrowingRepo.getOverdueBorrowingsInPeriod(
+      startDate,
+      endDate,
+    );
+
+    const filePath = `./exports/overdue_borrowings/borrowings_${formatDate(
+      startDate,
+    )}_${formatDate(endDate)}.xlsx`;
+
+    await this.exportToXlsx(borrowings, filePath);
+
+    return borrowings;
+  }
+
+  private async exportToXlsx(
+    borrowings: Borrowing[],
+    filePath: string,
+  ): Promise<void> {
+    const workbook = new Workbook();
+    const worksheet = workbook.addWorksheet('Borrowings');
+
+    worksheet.columns = [
+      { header: 'Book ID', key: 'bookId', width: 60 },
+      { header: 'Book Title', key: 'bookTitle', width: 20 },
+      { header: 'Borrower ID', key: 'borrowerId', width: 60 },
+      { header: 'Borrower Name', key: 'borrowerName', width: 20 },
+      { header: 'Due Date', key: 'dueDate', width: 70 },
+      { header: 'Returned', key: 'returned', width: 10 },
+    ];
+
+    borrowings.forEach((borrowing) => {
+      worksheet.addRow({
+        bookId: borrowing['book']['id'],
+        bookTitle: borrowing['book']['title'],
+        borrowerId: `${borrowing['borrower']['id']}`,
+        borrowerName: `${borrowing['borrower']['firstName']} ${borrowing['borrower']['lastName']}`,
+        dueDate: formatDate(borrowing['dueDate']),
+        returned: borrowing['returned'] ? 'Yes' : 'No',
+      });
+    });
+
+    // Update the path to include the directory
+    const directory = dirname(filePath);
+    if (!existsSync(directory)) {
+      mkdirSync(directory, { recursive: true });
+    }
+    await workbook.xlsx.writeFile(filePath);
   }
 }

@@ -1,3 +1,4 @@
+import { Service } from 'typedi';
 import {
   JsonController,
   Body,
@@ -9,14 +10,13 @@ import {
   QueryParam,
   UseBefore,
 } from 'routing-controllers';
-import { Service } from 'typedi';
 
-import { CreateBookDto } from '@modules/book/dtos/create-book.dto';
-import { BookService } from '@modules/book/book.service';
-import { UpdateBookDto } from '@modules/book/dtos/update-book.dto';
+import { Roles } from '@enums/roles.enum';
 import { authGuard } from '@middleware/auth-guard.middleware';
 import { roleGuard } from '@middleware/role-guard.middleware';
-import { Roles } from '@enums/roles.enum';
+import { BookService } from '@modules/book/book.service';
+import { CreateBookDto } from '@modules/book/dtos/create-book.dto';
+import { UpdateBookDto } from '@modules/book/dtos/update-book.dto';
 
 @Service()
 @JsonController('/books')
