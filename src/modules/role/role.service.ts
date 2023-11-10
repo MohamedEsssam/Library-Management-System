@@ -1,7 +1,7 @@
 import { Service } from 'typedi';
 
 import { Roles } from '@enums/roles.enum';
-import { RoleRepository } from './role.repository';
+import { RoleRepository } from '@modules/role/role.repository';
 
 @Service()
 export class RoleService {

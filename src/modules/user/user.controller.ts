@@ -1,3 +1,4 @@
+import { Service } from 'typedi';
 import {
   JsonController,
   Body,
@@ -6,13 +7,14 @@ import {
   Put,
   Delete,
   Param,
+  UseBefore,
 } from 'routing-controllers';
-import { Service } from 'typedi';
 
+import { authGuard } from '@middleware/auth-guard.middleware';
 import { UserService } from '@modules/user/user.service';
 import { CreateUserDto } from '@modules/user/dtos/create-user.dto';
-import { UpdateUserDto } from './dtos/update-user.dto';
-import { LoginUserDto } from './dtos/login-user.dto';
+import { UpdateUserDto } from '@modules/user/dtos/update-user.dto';
+import { LoginUserDto } from '@modules/user/dtos/login-user.dto';
 
 @Service()
 @JsonController('/users')
@@ -35,15 +37,17 @@ export class UserController {
   }
 
   @Put('/:userId')
-  async updateBook(
+  @UseBefore(authGuard)
+  async updateUser(
     @Param('userId') userId: string,
     @Body() updatedUserDto: UpdateUserDto,
   ) {
     return this.userService.updateUser(userId, updatedUserDto);
   }
 
+  @UseBefore(authGuard)
   @Delete('/:userId')
-  async deleteBook(@Param('userId') userId: string) {
+  async deleteUser(@Param('userId') userId: string) {
     return this.userService.deleteUser(userId);
   }
 }

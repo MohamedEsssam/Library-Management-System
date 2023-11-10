@@ -3,15 +3,16 @@ import { compareSync } from 'bcrypt';
 
 import { User } from '@db/entities/user.entity';
 import { UserRepository } from '@modules/user/user.repository';
-import { generateToken } from '@middleware/auth-guard.middleware';
-import { Roles } from '@enums/roles.enum';
 import { RoleService } from '@modules/role/role.service';
+import { AuthService } from '@modules/auth/auth.service';
+import { Roles } from '@enums/roles.enum';
 
 @Service()
 export class UserService {
   constructor(
     private userRepo: UserRepository,
     private roleService: RoleService,
+    private authService: AuthService,
   ) {}
 
   async createUser(user: Partial<User>, userRole = Roles.BORROWER) {
@@ -24,7 +25,7 @@ export class UserService {
 
     user['role'] = role;
     const createdUser = await this.userRepo.createUser(user);
-    const token = generateToken({
+    const token = this.authService.generateToken({
       id: createdUser['id'],
       email: createdUser['email'],
       role: role['name'],
@@ -40,7 +41,7 @@ export class UserService {
     )
       throw new Error(`user with email: ${email} not exist`);
 
-    const token = generateToken({
+    const token = this.authService.generateToken({
       id: existedUser['id'],
       email: existedUser['email'],
       role: existedUser['role']['name'],
