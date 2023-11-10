@@ -1,6 +1,9 @@
+import { Service } from 'typedi';
+
 import { jwtEnv } from '@utils/environments';
 import { sign } from 'jsonwebtoken';
 
+@Service()
 export class AuthService {
   private readonly SECRET_KEY = jwtEnv['JWT_KEY'];
   private readonly EXPIRATION_TIME = jwtEnv['EXPIRATION_TIME'];
