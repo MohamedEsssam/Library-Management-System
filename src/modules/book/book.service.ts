@@ -1,4 +1,5 @@
 import { Service } from 'typedi';
+import { NotFoundError } from 'routing-controllers';
 
 import { Book } from '@db/entities/book.entity';
 import { BookRepository } from '@modules/book/book.repository';
@@ -24,14 +25,14 @@ export class BookService {
 
   async updateBook(bookId: string, updatedBook: Partial<Book>) {
     const book = await this.getBookById(bookId);
-    if (!book) throw new Error(`book with bookId: ${bookId} not found`);
+    if (!book) throw new NotFoundError(`book with bookId: ${bookId} not found`);
 
     return this.bookRepo.updateBook(bookId, updatedBook);
   }
 
   async deleteBook(bookId: string) {
     const book = await this.getBookById(bookId);
-    if (!book) throw new Error(`book with bookId: ${bookId} not found`);
+    if (!book) throw new NotFoundError(`book with bookId: ${bookId} not found`);
 
     return this.bookRepo.deleteBook(bookId);
   }

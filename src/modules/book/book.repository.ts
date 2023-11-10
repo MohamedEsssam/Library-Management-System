@@ -7,30 +7,30 @@ import { Filters } from '@modules/book/types/filters';
 
 @Service()
 export class BookRepository {
-  private readonly bookRepo: Repository<Book>;
+  private readonly repo: Repository<Book>;
   constructor() {
-    this.bookRepo = dataSource.getRepository(Book);
+    this.repo = dataSource.getRepository(Book);
   }
 
   async createBook(user: Partial<Book>) {
-    const bookToBeCreate = this.bookRepo.create(user);
+    const bookToBeCreate = this.repo.create(user);
 
-    return this.bookRepo.save(bookToBeCreate);
+    return this.repo.save(bookToBeCreate);
   }
 
   async getBooks(filters?: Filters) {
-    return this.bookRepo.find({ where: filters ?? {} });
+    return this.repo.find({ where: filters ?? {} });
   }
 
   async getBookById(bookId: string) {
-    return this.bookRepo.findOneBy({ id: bookId });
+    return this.repo.findOneBy({ id: bookId });
   }
 
   async updateBook(bookId: string, updatedBook: Partial<Book>) {
-    return this.bookRepo.update(bookId, updatedBook);
+    return this.repo.update(bookId, updatedBook);
   }
 
   async deleteBook(bookId: string) {
-    return this.bookRepo.delete(bookId);
+    return this.repo.delete(bookId);
   }
 }
