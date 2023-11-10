@@ -1,3 +1,10 @@
 {
-  "cSpell.words": ["dtos", "ormconfig", "typedi", "typeorm"]
+  "cSpell.words": [
+    "dtos",
+    "exceljs",
+    "lasttmonth",
+    "ormconfig",
+    "typedi",
+    "typeorm"
+  ]
 }
