@@ -12,6 +12,7 @@ import { Service } from 'typedi';
 import { UserService } from '@modules/user/user.service';
 import { CreateUserDto } from '@modules/user/dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
+import { LoginUserDto } from './dtos/login-user.dto';
 
 @Service()
 @JsonController('/users')
@@ -24,13 +25,13 @@ export class UserController {
   }
 
   @Post('/login')
-  async login(@Body() user: CreateUserDto) {
-    return this.userService.createUser(user);
+  async login(@Body() user: LoginUserDto) {
+    return this.userService.login(user['email'], user['password']);
   }
 
   @Get('/borrowers')
   async getBorrowers(@Body() user: CreateUserDto) {
-    return this.userService.createUser(user);
+    return this.userService.getBorrowers();
   }
 
   @Put('/:userId')

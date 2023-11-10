@@ -7,33 +7,33 @@ import { Roles } from '@enums/roles.enum';
 
 @Service()
 export class UserRepository {
-  private readonly userRepo: Repository<User>;
+  private readonly repo: Repository<User>;
   constructor() {
-    this.userRepo = dataSource.getRepository(User);
+    this.repo = dataSource.getRepository(User);
   }
   async createUser(user: Partial<User>) {
-    const userToBeCreate = this.userRepo.create(user);
+    const userToBeCreate = this.repo.create(user);
 
-    return this.userRepo.save(userToBeCreate);
+    return this.repo.save(userToBeCreate);
   }
 
   async getUserById(userId: string) {
-    return this.userRepo.findOneBy({ id: userId });
+    return this.repo.findOneBy({ id: userId });
   }
 
   async getUserByEmail(email: string) {
-    return this.userRepo.findOneBy({ email });
+    return this.repo.findOneBy({ email });
   }
 
   async getBorrowers() {
-    return this.userRepo.findOneBy({ role: { name: Roles.BORROWER } });
+    return this.repo.findOneBy({ role: { name: Roles.BORROWER } });
   }
 
   async updateUser(userId: string, updatedUser: Partial<User>) {
-    return this.userRepo.update(userId, updatedUser);
+    return this.repo.update(userId, updatedUser);
   }
 
   async deleteUser(userId: string) {
-    return this.userRepo.delete(userId);
+    return this.repo.delete(userId);
   }
 }

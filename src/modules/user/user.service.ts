@@ -49,7 +49,7 @@ export class UserService {
   }
 
   async getUserById(userId: string) {
-    return this.userRepo.getUserByEmail(userId);
+    return this.userRepo.getUserById(userId);
   }
 
   async getUserByEmail(email: string) {
