@@ -8,6 +8,8 @@ import { AuthService } from '@modules/auth/auth.service';
 import { Roles } from '@enums/roles.enum';
 import { CustomError } from '@utils/custom-error';
 import { NotFoundError } from 'routing-controllers';
+import { HttpErrorCode } from '@enums/http-error-code.enum';
+import { HttpErrorName } from '@enums/http-error-name.ts';
 
 @Service()
 export class UserService {
@@ -22,8 +24,8 @@ export class UserService {
     if (existedUser)
       throw new CustomError(
         `user with email: ${user['email']} already exist`,
-        409,
-        'Conflict',
+        HttpErrorCode.CONFLICT_ERROR,
+        HttpErrorName.CONFLICT_ERROR,
       );
 
     const role = await this.roleService.getRoleByName(userRole);
