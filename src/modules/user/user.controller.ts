@@ -7,6 +7,7 @@ import {
   Put,
   Delete,
   Param,
+  QueryParam,
   UseBefore,
 } from 'routing-controllers';
 
@@ -15,6 +16,7 @@ import { UserService } from '@modules/user/user.service';
 import { CreateUserDto } from '@modules/user/dtos/create-user.dto';
 import { UpdateUserDto } from '@modules/user/dtos/update-user.dto';
 import { LoginUserDto } from '@modules/user/dtos/login-user.dto';
+import { Roles } from '@enums/roles.enum';
 
 @Service()
 @JsonController('/users')
@@ -22,8 +24,14 @@ export class UserController {
   constructor(private userService: UserService) {}
 
   @Post('/create')
-  async createUser(@Body() user: CreateUserDto) {
-    return this.userService.createUser(user);
+  async createUser(
+    @Body() user: CreateUserDto,
+    @QueryParam('isAdmin') isAdmin?: boolean,
+  ) {
+    return this.userService.createUser(
+      user,
+      isAdmin ? Roles.ADMIN : Roles.BORROWER,
+    );
   }
 
   @Post('/login')

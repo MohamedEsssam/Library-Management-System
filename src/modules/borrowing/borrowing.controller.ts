@@ -40,7 +40,7 @@ export class BorrowingController {
   }
 
   @Put('/return/:borrowingId')
-  @UseBefore(authGuard, roleGuard([Roles.BORROWER]))
+  @UseBefore(authGuard)
   returnBook(
     @Req() req: Request,
     @Param('borrowingId') borrowingId: string,
@@ -59,6 +59,8 @@ export class BorrowingController {
   @UseBefore(authGuard, rateLimitGuard(10, 60000), roleGuard([Roles.BORROWER]))
   getBorrowingsByBorrower(@Req() req: Request) {
     const borrower = req['user'];
+
+    console.log(borrower.id);
 
     return this.borrowingService.getBorrowingsByBorrower(borrower['id']);
   }
@@ -103,7 +105,7 @@ export class BorrowingController {
 
   @Get('/overdue/lasttmonth/export/xlsx')
   @UseBefore(authGuard, rateLimitGuard(10, 60000), roleGuard([Roles.ADMIN]))
-  async getBorrowingsOverdueInPeriod() {
+  async getBorrowingsOverdueLastMonth() {
     const startDate = getFirstDayOfMonth(getLastMonth(new Date()));
     const endDate = getLastDayOfMonth(getLastMonth(new Date()));
 

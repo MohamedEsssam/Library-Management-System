@@ -1,19 +1,19 @@
-import { IsEmail, IsString, MaxLength, MinLength } from 'class-validator';
+import { IsEmail, IsOptional, MaxLength, MinLength } from 'class-validator';
 
 export class UpdateUserDto {
-  @IsString()
+  @IsOptional()
   @IsEmail()
-  email: string;
+  email?: string;
 
-  @IsString()
+  @IsOptional()
   @MinLength(8)
-  password: string;
+  password?: string;
 
-  @IsString()
+  @IsOptional()
   @MaxLength(50)
-  firstName: string;
+  firstName?: string;
 
-  @IsString()
+  @IsOptional()
   @MaxLength(50)
-  lastName: string;
+  lastName?: string;
 }

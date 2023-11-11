@@ -6,6 +6,8 @@ import { UserRepository } from '@modules/user/user.repository';
 import { RoleService } from '@modules/role/role.service';
 import { AuthService } from '@modules/auth/auth.service';
 import { Roles } from '@enums/roles.enum';
+import { CustomError } from '@utils/custom-error';
+import { NotFoundError } from 'routing-controllers';
 
 @Service()
 export class UserService {
@@ -18,7 +20,11 @@ export class UserService {
   async createUser(user: Partial<User>, userRole = Roles.BORROWER) {
     const existedUser = await this.userRepo.getUserByEmail(user['email']);
     if (existedUser)
-      throw new Error(`user with email: ${user['email']} already exist`);
+      throw new CustomError(
+        `user with email: ${user['email']} already exist`,
+        409,
+        'Conflict',
+      );
 
     const role = await this.roleService.getRoleByName(userRole);
     console.log(role);
@@ -39,7 +45,7 @@ export class UserService {
     if (
       !(existedUser && this.verifyPassword(password, existedUser['password']))
     )
-      throw new Error(`user with email: ${email} not exist`);
+      throw new NotFoundError(`user with email: ${email} not exist`);
 
     const token = this.authService.generateToken({
       id: existedUser['id'],
