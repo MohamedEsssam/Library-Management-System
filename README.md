@@ -101,12 +101,12 @@ POSTGRES_PASSWORD=DB_PASSWORD
 
 ## Database Schema Diagram
 
-![Screenshot from 2023-11-10 15-15-37](https://github.com/MohamedEsssam/Library-Management-System/assets/39191037/c77bcc31-8420-48c8-8391-23e6f4867dd3)
+![Screenshot from 2023-11-10 15-15-37](https://file.io/yRfwr6JxXM56)
 
-## <img src="https://github.com/MohamedEsssam/Library-Management-System/assets/39191037/98f3ca7f-c694-4cf1-8adc-f06376c865be" width="40" height = "40"> APIs Documentation Postman
+## <img src="https://file.io/EV7dqARvtgRO" width="40" height = "40"> APIs Documentation Postman
 
 https://elements.getpostman.com/redirect?entityId=31097933-d4e133ab-b314-48cd-a907-0294f80745ce&entityType=collection
 
 ## Folder Structure
 
-![Screenshot from 2023-11-11 18-38-47](https://github.com/MohamedEsssam/Library-Management-System/assets/39191037/6f6cef50-4781-4f33-9076-99cb32676bbe)
+![Screenshot from 2023-11-11 18-38-47](https://file.io/8TEL8JdcdtP6)
