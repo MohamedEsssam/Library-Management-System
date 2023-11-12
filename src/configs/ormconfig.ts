@@ -20,6 +20,5 @@ export const dbConfigs: DataSourceOptions = {
 };
 
 const dataSource = new DataSource(dbConfigs);
-dataSource.initialize();
 
 export default dataSource;
